@@ -1,0 +1,4 @@
+{:paths []
+ :tasks
+ {repl (clojure "-M:clj:test:nrepl -m nrepl.cmdline")
+  test (clojure "-M:clj:test -m kaocha.runner unit-clj")}}
