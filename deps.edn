@@ -8,6 +8,7 @@
   :nrepl {:extra-deps {nrepl/nrepl      {:mvn/version "0.9.0"}}}
 
   :test {:extra-paths ["src/test"]
-         :extra-deps {lambdaisland/kaocha {:mvn/version "1.69.1069"}}}}}
+         :extra-deps {io.github.jerems/clj-nio {:git/sha"9c9e032268cd2fa9be9719f21ceb242e9eaacc35"}
+                      lambdaisland/kaocha {:mvn/version "1.69.1069"}}}}}
 
 
