@@ -1,0 +1,14 @@
+◊(require
+   '[fr.jeremyschoffen.prose.alpha.out.html.tags :as h]
+   '[fr.jeremyschoffen.prose.alpha.document.lib :as lib]
+   '[fr.jeremyschoffen.mbt2.prose.tags :as t])
+
+# Mbt2
+
+Some utilities to help publish my projects.
+
+◊t/version
+
+
+
+

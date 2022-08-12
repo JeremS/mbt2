@@ -1,6 +1,7 @@
 (ns fr.jeremyschoffen.mbt2.core
   (:require
-    [fr.jeremyschoffen.mbt2.git :as git]))
+    [fr.jeremyschoffen.mbt2.git :as git]
+    [fr.jeremyschoffen.mbt2.versioning :as v]))
 
 
 (defn assert-clean-repo [& {:as arg}]
@@ -8,9 +9,6 @@
     (throw (ex-info "Dirty repo." {}))))
 
 
-(defn tag-release! [{:keys [version] :as arg}]
-  (-> arg
-      (assoc :tag-name version)
-      git/tag!)
-  arg)
+(defn tag-release! [& {:as opts}]
+  (v/tag! opts))
 
