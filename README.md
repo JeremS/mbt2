@@ -5,7 +5,7 @@
 Some utilities to help publish my projects.
 
 ```clojure
-{io.github.jerems/mbt2 {:git/tag "v9", :git/sha "5d0a43baf3"}}
+{io.github.jerems/mbt2 {:git/tag "v11", :git/sha "66015e88fa"}}
 ```
 
 
