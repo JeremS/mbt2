@@ -1,20 +1,28 @@
 (ns build
   (:require
-    [fr.jeremyschoffen.mbt2.core :as mbt]
-    [fr.jeremyschoffen.mbt2.git :as git]
-    [fr.jeremyschoffen.mbt2.prose :as p]))
+    [fr.jeremyschoffen.mbt2.core :as mbt]))
 
 
 (def lib-name 'io.github.jerems/mbt2)
 
+
+(defn latest-git-coord []
+  (mbt/latest-git-coord :lib-name lib-name))
+
+
+(defn make-readme []
+  (mbt/generate-md-doc "README.md.prose" {:git-coord (latest-git-coord)}))
+
+
 (defn generate-readme! []
-  (spit "README.md" (p/generate-md-doc "README.md.prose" {:lib-name lib-name})))
+  (spit "README.md" (make-readme)))
+
 
 (defn generate-docs! []
   ;; generate stuff
   (generate-readme!)
-  (git/add-all!)
-  (git/commit! :commit-msg "Generated docs."))
+  (mbt/git-add-all!)
+  (mbt/git-commit! :commit-msg "Generated docs."))
 
 
 
@@ -25,5 +33,6 @@
 
 
 (comment
+  (println (make-readme))
   (generate-readme!)
   (release!))
