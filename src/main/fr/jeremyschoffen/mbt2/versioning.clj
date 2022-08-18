@@ -50,19 +50,57 @@
      "-"
      [:+ :digit]
      "-g"
-     [:capture [:+ :non-whitespace]]]))
+     [:+ :non-whitespace]]))
 
 
-(defn parse-description [desc opts]
-  (let [[_ tag-name sha] (re-matches (make-desc-regex opts) desc)]
-    {:git/tag tag-name
-     :git/sha sha}))
+(defn parse-tag-name-from-description [desc opts]
+  (let [[_ tag-name] (re-matches (make-desc-regex opts) desc)]
+    tag-name))
+
+
+(defn last-tag [& {:as opts}]
+  (-> opts
+      describe
+      (parse-tag-name-from-description opts)))
+
+
+(defn ref-for-tag [& {:keys [tag-name min-sha-length]
+                      :or {min-sha-length default-min-sha-length}
+                      :as opts}]
+  (-> opts
+      (assoc :git-args ["show-ref" (format "--abbrev=%d" min-sha-length) tag-name])
+      b/git-process))
+
+
+(def ref-regex
+  (regal/regex
+    [:cat
+     [:capture [:+ :non-whitespace]]
+     \space
+     [:+ :non-whitespace]]))
+
+
+(defn parse-commit-from-ref [ref]
+  (let [[_ commit] (re-matches ref-regex ref)]
+    commit))
+
+
+(defn commit-from-tag [& {:as opts}]
+  (-> opts
+      ref-for-tag
+      parse-commit-from-ref))
+
+
+(defn release-for-tag [& {:keys [tag-name] :as opts}]
+  {:git/tag tag-name
+   :git/sha (commit-from-tag opts)})
 
 
 (defn get-latest-release [& {:as opts}]
-  (-> opts
-      describe
-      (parse-description opts)))
+  (when-let [tag-name (last-tag opts)]
+    (-> opts
+        (assoc :tag-name tag-name)
+        release-for-tag)))
 
 
 (defn latest-git-coord [& {:keys [lib-name]}]
