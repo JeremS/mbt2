@@ -19,6 +19,9 @@
 
 (def basic-git-process-arg {:dir (str test-repo-path)})
 
+(defn ensure-dir! [path]
+  (if-not (fs/exists? path)
+    (fs/create-directory! path)))
 
 (defn git-init!
   "use :dir for the dir to init"
@@ -29,6 +32,7 @@
 
 
 (defn setup-test-repo! []
+  (ensure-dir! test-resources-dir)
   (fs/create-directory! test-repo-path)
   (git-init! basic-git-process-arg))
 
