@@ -22,7 +22,7 @@
   ;; generate stuff
   (generate-readme!)
   (mbt/git-add-all!)
-  (mbt/git-commit! :commit-msg "Generated docs."))
+  (mbt/git-commit! :commit-msg "New release."))
 
 
 
