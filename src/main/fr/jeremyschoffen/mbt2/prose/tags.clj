@@ -16,7 +16,7 @@
 
 
 (defn git-coordinates
-  "Tag displaying the git coordinates of the library. coordinates are found under the key
+  "Tag displaying the git coordinates of the library. Coordinates are found under the key
   `:git-coord` of the document's inputs."
   []
   (clojure-block

@@ -9,17 +9,33 @@
 (def default-version-tag-prefix "v")
 
 
-(defn new-version-number [& {:as opts}]
+(defn new-version-number
+  "Alias to [[clojure.tools.build/git-count-revs]].
+
+  Same options as [[clojure.tools.build/git-process]]."
+  [& {:as opts}]
   (b/git-count-revs opts))
 
 
-(defn new-tag-name [& {:keys [prefix]
-                       :or {prefix default-version-tag-prefix}
-                       :as opts}]
+(defn new-tag-name
+  "Generate a new tag based on optional `:prefix` and [[new-version-number]].
+
+  Options:
+  - `:prefix`
+  - Same as [[clojure.tools.build/git-process]]."
+  [& {:keys [prefix]
+      :or {prefix default-version-tag-prefix}
+      :as opts}]
   (str prefix (new-version-number opts)))
 
 
-(defn tag! [& {:as opts}]
+(defn tag!
+  "Tag the current commit with a new vesion.
+
+  Options:
+  - `:prefix`
+  - Same as [[clojure.tools.build/git-process]]."
+  [& {:as opts}]
   (-> opts
       (assoc :tag-name (new-tag-name opts))
       git/tag!))
@@ -27,9 +43,9 @@
 
 
 
-(defn make-describe-command [{:keys [prefix min-sha-length]
-                              :or {min-sha-length default-min-sha-length
-                                   prefix default-version-tag-prefix}}]
+(defn- make-describe-command [{:keys [prefix min-sha-length]
+                               :or {min-sha-length default-min-sha-length
+                                    prefix default-version-tag-prefix}}]
   ["describe" "--long" "--tags"
    "--match" (str prefix "**")
    (format "--abbrev=%d" min-sha-length)
@@ -58,7 +74,13 @@
     tag-name))
 
 
-(defn last-tag [& {:as opts}]
+(defn last-tag
+  "Get the name of the tag created last.
+
+  Options:
+  - `:prefix`
+  - Same as [[clojure.tools.build/git-process]]."
+  [& {:as opts}]
   (-> opts
       describe
       (parse-tag-name-from-description opts)))
@@ -85,25 +107,57 @@
     commit))
 
 
-(defn commit-from-tag [& {:as opts}]
+(defn commit-from-tag
+  "Get a commit from a tag name.
+
+  Args:
+  - `:tag-name`
+  Options:
+  - `:min-sha-length`
+  - Same as [[clojure.tools.build/git-process]]."
+  [& {:as opts}]
   (-> opts
       ref-for-tag
       parse-commit-from-ref))
 
 
-(defn release-for-tag [& {:keys [tag-name] :as opts}]
+(defn release-for-tag
+  "Get the map part of git coordinates of the lib for a given tag.
+
+  Args:
+  - `:tag-name`
+  Options:
+  - `:min-sha-length`
+  - Same as [[clojure.tools.build/git-process]]."
+  [& {:keys [tag-name] :as opts}]
   {:git/tag tag-name
    :git/sha (commit-from-tag opts)})
 
 
-(defn get-latest-release [& {:as opts}]
+(defn get-latest-release
+  "Get the map part of git coordinates of the lib for the tag created last.
+
+  Options:
+  - `:prefix`
+  - `:min-sha-length`
+  - Same as [[clojure.tools.build/git-process]]."
+  [& {:as opts}]
   (when-let [tag-name (last-tag opts)]
     (-> opts
         (assoc :tag-name tag-name)
         release-for-tag)))
 
 
-(defn latest-git-coord [& {:keys [lib-name] :as opts}]
+(defn latest-git-coord
+  "Get the git coordinates of the lib for the latest tag.
+
+  Args:
+  - `:lib-name`
+  Options:
+  - `:prefix`
+  - `:min-sha-length`
+  - Same as [[clojure.tools.build/git-process]]."
+  [& {:keys [lib-name] :as opts}]
   {lib-name (get-latest-release opts)})
 
 
