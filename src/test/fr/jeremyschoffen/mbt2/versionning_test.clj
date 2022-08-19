@@ -34,6 +34,27 @@
     (is (= (:git/tag (ct/latest-release)) "v3"))))
 
 
+(def prefix "mbt-v")
+
+(def git-opts (assoc ct/basic-git-process-arg :prefix prefix))
+
+
+(deftest custom-prefix
+  (testing "first tag"
+    (do
+      (ct/create-example-file! "f1.txt" "f1")
+      (git/add-all! git-opts)
+      (ct/commit! "Added f1.")
+      (v/tag! git-opts))
+
+    (let [tn (v/last-tag git-opts)
+          commit (v/commit-from-tag (assoc git-opts :tag-name tn))]
+      (is (= tn (str prefix "1")))
+      (is (= (v/latest-git-coord (assoc git-opts :lib-name 'toto/titi))
+             {'toto/titi {:git/sha commit
+                          :git/tag tn}})))))
+
+
 (comment
   (clojure.test/run-tests)
   (ct/describe)

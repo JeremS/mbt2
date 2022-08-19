@@ -103,7 +103,7 @@
         release-for-tag)))
 
 
-(defn latest-git-coord [& {:keys [lib-name]}]
-  {lib-name (get-latest-release)})
+(defn latest-git-coord [& {:keys [lib-name] :as opts}]
+  {lib-name (get-latest-release opts)})
 
 
