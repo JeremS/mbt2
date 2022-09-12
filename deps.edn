@@ -1,18 +1,18 @@
 {:paths ["src/main"]
 
  :deps {io.github.seancorfield/build-clj {:git/tag "v0.8.3" :git/sha "7ac1f8d"}
-        io.github.jerems/prose {:git/sha "2059e4a3a8de2bb2a5da906a60e361eca30febdc"}
+        io.github.jerems/prose {:git/tag "v78", :git/sha "6373376862"}
         lambdaisland/regal {:mvn/version "0.0.143"}}
 
  :aliases
  {:clj {:extra-deps {org.clojure/clojure {:mvn/version "1.11.1"}}}
 
-  :nrepl {:extra-deps {nrepl/nrepl      {:mvn/version "0.9.0"}}}
+  :nrepl {:extra-deps {nrepl/nrepl      {:mvn/version "1.0.0"}}}
 
   :build {:extra-paths ["src/build" "src/docs"]}
 
   :test {:extra-paths ["src/test"]
-         :extra-deps {io.github.jerems/clj-nio {:git/sha"9c9e032268cd2fa9be9719f21ceb242e9eaacc35"}
+         :extra-deps { io.github.jerems/clj-nio {:git/tag "v70", :git/sha "2a9e1b4512"}
                       lambdaisland/kaocha {:mvn/version "1.69.1069"}}}}}
 
 
